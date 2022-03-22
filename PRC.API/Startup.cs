@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PRC.CORE.Media.Call;
-using PRC.MEDIA.Call;
+using PRC.MEDIA.OXE;
 using System;
 using System.Collections.Generic;
 using System.Linq;
