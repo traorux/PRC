@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PRC.CORE\PRC.CORE.csproj" />
     <ProjectReference Include="..\PRC.MEDIA.OXE\PRC.MEDIA.OXE.csproj" />
+    <ProjectReference Include="..\PRC.PROCESS\PRC.PROCESS.csproj" />
   </ItemGroup>
 
 </Project>

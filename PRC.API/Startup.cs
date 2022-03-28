@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PRC.CORE.Media.Call;
 using PRC.MEDIA.OXE;
+using PRC.PROCESS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,8 @@ namespace PRC.COEUR
         {
 
             services.AddControllers();
-            services.AddSingleton<IMediaCall, MediaCallOXE>();
+            services.AddSingleton<IMediaCall, MediaOXE>();
+            services.AddHostedService<ServiceBackground>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PRC.COEUR", Version = "v1" });
@@ -59,4 +61,5 @@ namespace PRC.COEUR
             });
         }
     }
+
 }

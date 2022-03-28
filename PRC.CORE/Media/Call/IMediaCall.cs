@@ -8,6 +8,8 @@ namespace PRC.CORE.Media.Call
 {
     public interface IMediaCall
     {
-        Task<int> MakeCall(string AgentNumber, string CustomNumber);
+        Task EventRegister();
+        Task<bool> MakeCall(string AgentNumber, string CustomNumber);
+        event Action<string> ReceivedCall;
     }
 }

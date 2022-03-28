@@ -18,13 +18,19 @@ namespace PRC.COEUR.Controllers
         public CallController(IMediaCall mediaCall)
         {
             _mediaCall = mediaCall;
+            _mediaCall.ReceivedCall += _mediaCall_ReceivedCall;
+        }
+
+        private void _mediaCall_ReceivedCall(string obj)
+        {
+            Console.WriteLine(obj);
         }
 
         // GET: api/<CallController>
         [HttpGet]
         public async Task<IEnumerable<string>> Get()
         {
-            await _mediaCall.MakeCall("1001", "1002");
+            await _mediaCall.MakeCall("769", "764");
 
             return new string[] { "value1", "value2" };
         }
