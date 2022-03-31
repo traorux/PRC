@@ -26,14 +26,31 @@ namespace PRC.COEUR.Controllers
             Console.WriteLine(obj);
         }
 
-        // GET: api/<CallController>
+        ////GET: api/<CallController>
         [HttpGet]
         public async Task<IEnumerable<string>> Get()
         {
-            await _mediaCall.MakeCall("769", "764");
+            await _mediaCall.MakeCallAsync("890", "764");
 
             return new string[] { "value1", "value2" };
         }
+
+        //[HttpGet]
+        //public async Task<IEnumerable<string>> Get()
+        //{
+        //    await _mediaCall.BasicMakeCallAsync("890", "764");
+
+        //    return new string[] { "value1", "value2" };
+        //}
+
+        //GET: api/<CallController>
+        //[HttpGet]
+        //public async Task<IEnumerable<string>> Get()
+        //{
+        //    await _mediaCall.MakeCallAsync("890", "764", true, false);
+
+        //    return new string[] { "value1", "value2" };
+        //}
 
         // GET api/<CallController>/5
         [HttpGet("{id}")]
