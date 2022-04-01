@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PRC.CORE.Media.Call.Events
 {
-    public class OnUserStateModifiedEvent
+    public class OnUserStateModifiedEvent : O2GEvent
     {
         public String LoginName;
         public UserState State;

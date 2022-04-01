@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PRC.CORE.Media.Call.Events
 {
-    public class OnTelephonyStateEvent
+    public class OnTelephonyStateEvent : O2GEvent
     {
         public string LoginName { get; init; }
         public TelephonicState State { get; init; }

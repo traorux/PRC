@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PRC.CORE.Media.Call.Events
 {
-    public class OnCallModifiedEvent
+    public class OnCallModifiedEvent : O2GEvent
     {
         public string LoginName { get; init; }
         public string CallRef { get; init; }

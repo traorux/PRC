@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PRC.CORE.Media.Call.Events
 {
-    public class OnDynamicStateChangedEvent
+    public class OnDynamicStateChangedEvent : O2GEvent
     {
         public string LoginName { get; init; }
         public HuntingGroupStatus HuntingGroupState { get; init; }

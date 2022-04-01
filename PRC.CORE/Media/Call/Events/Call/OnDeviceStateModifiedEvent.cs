@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PRC.CORE.Media.Call.Events
 {
-    public class OnDeviceStateModifiedEvent
+    public class OnDeviceStateModifiedEvent : O2GEvent
     {
         public String LoginName;
         public List<DeviceState> DeviceStates { get; init; }

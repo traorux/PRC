@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace PRC.CORE.Media.Call.Events
 {
-    public class OnCallCreatedEvent 
+    public class OnCallCreatedEvent : O2GEvent
     {
         public string LoginName { get; init; }
         public string CallRef { get; init; }
