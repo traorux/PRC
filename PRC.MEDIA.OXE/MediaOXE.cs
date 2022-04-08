@@ -17,19 +17,18 @@ namespace PRC.MEDIA.OXE
 {
     public class MediaOXE : IMediaCall
     {
-        
 
-        private string myLoginName = "oxe890";
+
+        private string myLoginName = "oxe769";
         private string myPassword = "0000";
-        private O2G.Application myApplication; 
+        private O2G.Application myApplication;
 
         private ITelephony telephony;
         private bool Connected = false;
+
         private readonly string Host_o2G;
         private readonly ILogger<MediaOXE> logger;
-        private readonly Action _action;
-
-        public event Action<string> ReceivedCall;
+        public event Action<OnCallCreatedEvent> CallCreated;
 
         public MediaOXE(ILogger<MediaOXE> logger, IConfiguration Config)
         {
@@ -39,6 +38,7 @@ namespace PRC.MEDIA.OXE
             this.logger = logger;
             //EventRegister().Wait();
         }
+
         public async Task EventRegister()
         {
             Connected = false;
@@ -72,21 +72,29 @@ namespace PRC.MEDIA.OXE
                         Connected = true;
                         telephony.CallCreated += (source, ev) =>
                         {
-                            ReceivedCall?.Invoke(ev.Event.Initiator);
+                            var onCallCreateEv = new OnCallCreatedEvent()
+                            {
+                                LoginName = ev.Event.LoginName,
+                                CallRef = ev.Event.CallRef,
+                                DeviceNumber = ev.Event.Legs[0].DeviceId,
+                                CallerNumber = ev.Event.Participants[0].ParticipantId,
+                                State = ev.Event.Legs[0].State.ToString()
+                            };
+                            CallCreated?.Invoke(onCallCreateEv);
                         };
                         telephony.CallModified += (source, ev) =>
                         {
-                            ReceivedCall?.Invoke(ev.Event.LoginName);
+                            //ReceivedCall?.Invoke(ev.Event.LoginName);
                         };
                         telephony.CallRemoved += (source, ev) =>
                         {
-                            ReceivedCall?.Invoke(ev.Event.EventName);
+                            //ReceivedCall?.Invoke(ev.Event.EventName);
                         };
 
                         logger.LogDebug($"O2G is connected and Event is established host {Host_o2G}.");
                     }
                 };
-                
+
                 // Suscribe to events using the built subscription
                 await myApplication.SubscribeAsync(subscription);
             }

@@ -21,9 +21,9 @@ namespace PRC.PROCESS
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await mediaCall.EventRegister();
-            mediaCall.ReceivedCall += (s) => 
+            mediaCall.CallCreated += (ev) =>
             {
-                Console.WriteLine(s);
+
             };
             await Task.Delay(-1);
         }

@@ -18,7 +18,7 @@ namespace PRC.COEUR.Controllers
         public CallController(IMediaCall mediaCall)
         {
             _mediaCall = mediaCall;
-            _mediaCall.ReceivedCall += _mediaCall_ReceivedCall;
+            //_mediaCall.ReceivedCall += _mediaCall_ReceivedCall;
         }
 
         private void _mediaCall_ReceivedCall(string obj)
