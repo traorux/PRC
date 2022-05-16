@@ -14,9 +14,9 @@ namespace PRC.CORE.Media.Call
     public interface IMediaCall
     {
         event Action<OnCallCreatedEvent> CallCreated;
+        event Action<OnCallModifiedEvent> CallModified;
+        event Action<OnCallRemovedEvent> CallRemoved;
 
-        //public event Action<Events.O2GEventArgs<OnCallModifiedEvent>> CallModified;
-        //public event Action<Events.O2GEventArgs<OnCallRemovedEvent>> CallRemoved;
         //public event Action<Events.O2GEventArgs<OnUserStateModifiedEvent>> UserStateModified;
         //public event Action<Events.O2GEventArgs<OnTelephonyStateEvent>> TelephonyState;
         //public event Action<Events.O2GEventArgs<OnDeviceStateModifiedEvent>> DeviceStateModified;
@@ -26,8 +26,9 @@ namespace PRC.CORE.Media.Call
         //event Action<string> ReceivedCall;
         Task<bool> BasicMakeCallAsync(string AgentNumber, string CustomNumber);
         Task<bool> BasicAnswerCallAsync(string AgentNumber);
-        Task<bool> MakeCallAsync(string AgentNumber, string CustomNumber);
-        Task<bool> MakeCallAsync(string AgentNumber, string CustomNumber, bool autoAnswer = true, bool inhibitProgressTone = false, string associatedData = null, string callingNumber = null, string loginName = null);
+        //Task<bool> MakeCallAsync(string AgentNumber, string CustomNumber);
+        //Task<bool> MakeCallAsync(string AgentNumber, string CustomNumber, bool autoAnswer = true, bool inhibitProgressTone = false, string associatedData = null, string callingNumber = null, string loginName = null);
+        Task<bool> BasicDropMeAsync(string loginName = null);
 
 
         //Task<List<PbxCall>> GetCallsAsync(string loginName = null); 

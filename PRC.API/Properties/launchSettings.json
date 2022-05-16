@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "PRC.COEUR": {
+    "PRC.API": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

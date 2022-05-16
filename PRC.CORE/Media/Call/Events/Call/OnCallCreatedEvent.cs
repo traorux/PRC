@@ -8,12 +8,11 @@ namespace PRC.CORE.Media.Call.Events
     {
         public string LoginName { get; init; }
         public string CallRef { get; init; }
-        //public Cause Cause { get; init; }
-        //public CallData CallData { get; init; }
+  
         public string DeviceNumber { get; init; }
-        public string  CallerNumber { get; set; }
+        public string  CallerNumber { get; init; }
 
-        public string State { get; set; }
+        public string State { get; init; }
         //public int MyProperty { get; set; }
 
         //public List<Leg> Legs { get; init; }

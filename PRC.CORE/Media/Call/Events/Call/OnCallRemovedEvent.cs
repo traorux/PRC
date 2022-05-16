@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace PRC.CORE.Media.Call.Events
 {
-    public class OnCallRemovedEvent : O2GEvent
+    public class OnCallRemovedEvent 
     {
         public string LoginName { get; init; }
         public string CallRef { get; init; }
-        public Cause Cause { get; init; }
-        public string NewDestination { get; init; }
-        public List<DeviceCapabilities> DeviceCapabilities { get; init; }
+       // public Cause Cause { get; init; }
+        //public string NewDestination { get; init; }
+       // public List<DeviceCapabilities> DeviceCapabilities { get; init; }
     }
 }

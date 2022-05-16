@@ -5,10 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
     <Folder Include="AppMetier\" />
-    <Folder Include="Repository\" />
-    <Folder Include="Service\" />
   </ItemGroup>
 
 </Project>

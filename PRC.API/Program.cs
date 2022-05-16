@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PRC.COEUR
+namespace PRC.API
 {
     public class Program
     {
@@ -21,6 +21,11 @@ namespace PRC.COEUR
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureLogging(loggingBuilder =>
+                {
+                    loggingBuilder.AddConsole();
+                    loggingBuilder.SetMinimumLevel(LogLevel.Debug);
                 });
     }
 }
