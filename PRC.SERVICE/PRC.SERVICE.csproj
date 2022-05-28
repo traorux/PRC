@@ -10,4 +10,9 @@
     <Folder Include="Repository\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PRC.CORE\PRC.CORE.csproj" />
+    <ProjectReference Include="..\PRC.PROCESS\PRC.PROCESS.csproj" />
+  </ItemGroup>
+
 </Project>

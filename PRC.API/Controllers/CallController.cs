@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PRC.CORE.Media.Call;
+using PRC.CORE.Model;
+using PRC.CORE.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,18 +9,19 @@ using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace PRC.COEUR.Controllers
+namespace PRC.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class CallController : ControllerBase
     {
-        private readonly IMediaCall _mediaCall;
+        private readonly IMediaCall mediaCall;
+        private readonly IMediaService mediaService;
 
-        public CallController(IMediaCall mediaCall)
+        public CallController(IMediaCall mediaCall, IMediaService mediaService)
         {
-            _mediaCall = mediaCall;
-            //_mediaCall.ReceivedCall += _mediaCall_ReceivedCall;
+            this.mediaCall = mediaCall;
+            this.mediaService = mediaService;
         }
 
         private void _mediaCall_ReceivedCall(string obj)
@@ -26,55 +29,50 @@ namespace PRC.COEUR.Controllers
             Console.WriteLine(obj);
         }
 
-        ////GET: api/<CallController>
-        [HttpGet]
-        public async Task<IEnumerable<string>> Get()
-        {
-            await _mediaCall.MakeCallAsync("890", "764");
 
-            return new string[] { "value1", "value2" };
-        }
 
-        //[HttpGet]
-        //public async Task<IEnumerable<string>> Get()
-        //{
-        //    await _mediaCall.BasicMakeCallAsync("890", "764");
-
-        //    return new string[] { "value1", "value2" };
-        //}
-
-        //GET: api/<CallController>
-        //[HttpGet]
-        //public async Task<IEnumerable<string>> Get()
-        //{
-        //    await _mediaCall.MakeCallAsync("890", "764", true, false);
-
-        //    return new string[] { "value1", "value2" };
-        //}
-
-        // GET api/<CallController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<CallController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<bool> EmettreAppel(Call call)
         {
+            return await mediaService.MakeOutgoingCall(call);
         }
 
-        // PUT api/<CallController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+
+
+        [HttpPost]
+        public async Task<Call> RepondreAppel(Call call)
         {
+            return await mediaService.IncomingCallCommunication(call);
         }
 
-        // DELETE api/<CallController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+
+
+        [HttpGet]
+        public async Task<bool> Racrocher()
         {
+            return await mediaService.DropeCall();
         }
+
+        [HttpGet]   
+        public async Task<IEnumerable<Call>> CallsList()
+        {
+            return await mediaService.GetCallsList();
+        }
+
+        [HttpPost]
+        public async Task<IEnumerable<Call>> CallsHistory(string customerNumber)
+        {
+            return await mediaService.GetHistsList(customerNumber);
+        }
+
+
+
+        [HttpPost]
+        public async Task<Call> ObtenirCall(string CallRef)
+        {
+            return await mediaService.GetCallInfos(CallRef);
+        }
+
     }
 }
+

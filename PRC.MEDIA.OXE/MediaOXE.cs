@@ -1,14 +1,17 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using o2g;
+using o2g.Events.Telephony;
+using o2g.Types.TelephonyNS.CallNS;
 using o2g.Types.TelephonyNS.CallNS.AcdNS;
 using o2g.Utility;
+using PRC.CORE;
 using PRC.CORE.Media.Call;
 using PRC.CORE.Media.Call.Events;
-using PRC.CORE.Media.Call.Types;
-using PRC.CORE.Media.Call.Types.Call;
+using PRC.CORE.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using static o2g.O2G;
 using static System.Net.Mime.MediaTypeNames;
@@ -19,7 +22,7 @@ namespace PRC.MEDIA.OXE
     {
 
 
-        private string myLoginName = "oxe769";
+        private string myLoginName = "oxe891";
         private string myPassword = "0000";
         private O2G.Application myApplication;
 
@@ -28,7 +31,14 @@ namespace PRC.MEDIA.OXE
 
         private readonly string Host_o2G;
         private readonly ILogger<MediaOXE> logger;
-        public event Action<OnCallCreatedEvent> CallCreated;
+        public event Action<Call, ContextAppels> CallEvent;
+        private Dictionary<string, CallDB> CallDb = new Dictionary<string, CallDB>();
+
+        private class CallDB
+        {
+            public Call Call { get; set; }
+            public ContextAppels ContextAppels { get; set; }
+        }
 
         public MediaOXE(ILogger<MediaOXE> logger, IConfiguration Config)
         {
@@ -72,23 +82,104 @@ namespace PRC.MEDIA.OXE
                         Connected = true;
                         telephony.CallCreated += (source, ev) =>
                         {
-                            var onCallCreateEv = new OnCallCreatedEvent()
+                            try
                             {
-                                LoginName = ev.Event.LoginName,
-                                CallRef = ev.Event.CallRef,
-                                DeviceNumber = ev.Event.Legs[0].DeviceId,
-                                CallerNumber = ev.Event.Participants[0].ParticipantId,
-                                State = ev.Event.Legs[0].State.ToString()
-                            };
-                            CallCreated?.Invoke(onCallCreateEv);
+                                if (true)
+                                {
+                                    var DateH = DateTime.Now;
+                                    State state = new State() { 
+                                        Status = GetState(ev.Event.Legs[0].State, ev.Event.Legs[0].RingingRemote),
+                                        dateHeure = DateH
+                                    }
+                                        ;
+                                    Call call = new Call
+                                    {
+                                        CallRef = ev.Event.CallRef,
+                                        ExtensionNumber = ev.Event.Legs[0].DeviceId,
+                                        CustomerNumber = GetParticipant(ev.Event.Participants),
+                                        dateHeure = DateH,
+                                        typeCall = GetTypeCall(ev.Event.Legs[0].State),
+                                        removeParticipant = null //EndParticipant
+                                        
+                                    };
+                                    call.States.Add(state);
+                                    ContextAppels context = getContextAppel(ev, call, ContextAppels.PasDappel);
+                                    
+
+                                    CallDb.Add(call.CallRef, new CallDB { Call = call, ContextAppels = context }) ;
+
+                                    CallEvent?.Invoke(call, context);
+                                }
+                            }
+                            catch (Exception)
+                            {
+                            }
                         };
                         telephony.CallModified += (source, ev) =>
                         {
-                            //ReceivedCall?.Invoke(ev.Event.LoginName);
+                            try
+                            {
+                                if (true)
+                                {
+                                    var callDB = CallDb.GetValueOrDefault<string, CallDB>(ev.Event.CallRef);
+                                    var call = callDB?.Call;
+                                    var prevContext = callDB.ContextAppels;
+                                    ContextAppels context = getContextAppel(ev, call, prevContext);
+                                    if (string.IsNullOrEmpty(call.CustomerNumber))
+                                    {
+                                        call.CustomerNumber = ev.Event.CallData.InitialCalled.Id.PhoneNumber;
+                                    }
+                                    if (ev.Event.ModifiedLegs != null)
+                                    {
+                                        //call.state = GetState(ev.Event.ModifiedLegs[0].State); 
+                                        var DateH = DateTime.Now;
+                                        State state = new State()
+                                        {
+                                            Status = GetState(ev.Event.ModifiedLegs[0].State, ev.Event.ModifiedLegs[0].RingingRemote),
+                                            dateHeure = DateH
+                                        };
+                                        call.States.Add(state);
+
+                                    }
+                                   
+                                    if (string.IsNullOrEmpty(call.removeParticipant))
+                                    {
+                                        if (ev.Event.RemovedParticipantIds != null)
+                                        {
+                                            if (ev.Event.RemovedParticipantIds.Count > 0)
+                                            {
+                                                call.removeParticipant = ev.Event.RemovedParticipantIds[0];  
+                                            }
+                                        }
+                                    }
+                                    if (context != ContextAppels.PasDappel)
+                                    {
+                                        CallEvent?.Invoke(call, context);
+                                    }
+                                }
+                            }
+                            catch (Exception)
+                            {
+                            }
                         };
                         telephony.CallRemoved += (source, ev) =>
                         {
-                            //ReceivedCall?.Invoke(ev.Event.EventName);
+                            try
+                            {
+                                var call = CallDb.GetValueOrDefault<string, CallDB>(ev.Event.CallRef).Call;
+                                CallDb.Remove(ev.Event.CallRef);
+                                var DateH = DateTime.Now;
+                                State state = new State()
+                                {
+                                    Status = "Terminé",
+                                    dateHeure = DateH
+                                };
+                                call.States.Add(state);
+                                CallEvent?.Invoke(call, ContextAppels.FinDappel);
+                            }
+                            catch (Exception)
+                            {
+                            }
                         };
 
                         logger.LogDebug($"O2G is connected and Event is established host {Host_o2G}.");
@@ -97,6 +188,19 @@ namespace PRC.MEDIA.OXE
 
                 // Suscribe to events using the built subscription
                 await myApplication.SubscribeAsync(subscription);
+                while (true)
+                {
+                    if (myApplication is null)
+                    {
+                        Console.WriteLine("MyApplication is null");
+                    }
+                    else
+                    {
+                        Console.WriteLine("MyApplication is not null");
+                    }
+                    await Task.Delay(5000);
+                }
+                //await Task.Delay(-1);
             }
             catch (Exception ex)
             {
@@ -105,7 +209,118 @@ namespace PRC.MEDIA.OXE
             }
         }
 
+        //Gestion context CallModified
+        private ContextAppels getContextAppel(o2g.Events.O2GEventArgs<o2g.Events.Telephony.OnCallModifiedEvent> ev, Call call, ContextAppels prevContext)
+        {
+            if (ev.Event.EventName == "OnCallModified" && ev.Event.ModifiedLegs[0].State == MediaState.RingingOutgoing && ev.Event.ModifiedLegs[0].RingingRemote)
+            {
+                if (prevContext == ContextAppels.AppelSortantSonerie)
+                {
+                    return ContextAppels.PasDappel;
+                }
+                return ContextAppels.AppelSortantSonerie;
+            }
+            if (ev.Event.EventName == "OnCallModified" && ev.Event.ModifiedLegs[0].State == MediaState.Active && call.typeCall == "OutgoingCall")
+            {
+                if (prevContext == ContextAppels.AppelSortantCommunication)
+                {
+                    return ContextAppels.PasDappel;
+                }
+                return ContextAppels.AppelSortantCommunication;
+            }
+            if (ev.Event.EventName == "OnCallModified" && ev.Event.ModifiedLegs[0].State == MediaState.Active && call.typeCall == "IncominCall")
+            {
+                if (prevContext == ContextAppels.AppelEntrantCoummunucation)
+                {
+                    return ContextAppels.PasDappel;
+                }
+                return ContextAppels.AppelEntrantCoummunucation;
+            }
+            return ContextAppels.PasDappel;
+        }
 
+
+        //Gestion context CallCreated
+        private ContextAppels getContextAppel(o2g.Events.O2GEventArgs<OnCallCreatedEvent> ev, Call call, ContextAppels prevContext)
+        {
+            if (ev.Event.EventName == "OnCallCreated" && ev.Event.Legs[0].State == MediaState.Dialing)
+            {
+                if (prevContext == ContextAppels.EmissionAppelSortant)
+                {
+                    return ContextAppels.PasDappel;
+                }
+                return ContextAppels.EmissionAppelSortant;
+            }
+
+            if (ev.Event.EventName == "OnCallCreated" && ev.Event.Legs[0].State == MediaState.RingingIncoming)
+            {
+                if (prevContext == ContextAppels.ReceptionAppelEntrant)
+                {
+                    return ContextAppels.PasDappel;
+                }
+                return ContextAppels.ReceptionAppelEntrant;
+            }
+           
+            return ContextAppels.PasDappel;
+        }
+        private string GetState(MediaState state, bool RingingRemote)
+        {
+            if (state == MediaState.Dialing)
+            {
+                return "Pending";
+            }
+            if (state == MediaState.RingingIncoming || state == MediaState.RingingOutgoing && RingingRemote == true)
+            {
+                return "Ringing";
+            }
+            if (state == MediaState.RingingOutgoing && RingingRemote == false)
+            {
+                return "Progressing";
+            }
+            if (state == MediaState.Active)
+            {
+                return "Conversation";
+            }
+            if (state == MediaState.Releasing)
+            {
+                return "EndCall";
+            }
+            if (state == MediaState.Held)
+            {
+                return "Mise en attente";
+            }
+            return null;
+        }
+
+        private string GetTypeCall(MediaState state)
+        {
+            if (state == MediaState.Dialing || state == MediaState.RingingOutgoing)
+            {
+                return "OutgoingCall";
+            }
+            if (state == MediaState.RingingIncoming)
+            {
+                return "IncomingCall";
+            }
+            return null;
+        }
+
+
+        private string GetParticipant(List<o2g.Types.TelephonyNS.CallNS.Participant> participants)
+        {
+            if (participants != null)
+            {
+                if (participants.Count > 0)
+                {
+                    var part = participants.FirstOrDefault().ParticipantId;
+                    if (part != null)
+                    {
+                        return part;
+                    }
+                }
+            }
+            return string.Empty;
+        }
 
         public Task<bool> MakeCallAsync(string AgentNumber, string CustomNumber)
         {

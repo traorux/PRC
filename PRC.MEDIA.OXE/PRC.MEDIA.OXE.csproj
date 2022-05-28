@@ -5,14 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0-preview.1.20120.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+    <PackageReference Include="o2g-sdk" Version="1.1.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PRC.CORE\PRC.CORE.csproj" />
+    <ProjectReference Include="..\PRC.DATA\PRC.DATA.csproj" />
     <ProjectReference Include="..\PRC.HELPER\PRC.HELPER.csproj" />
-    <ProjectReference Include="..\PRC.MEDIA\SubProjet\o2g-sdk.csproj" />
   </ItemGroup>
 
 </Project>

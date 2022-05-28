@@ -13,8 +13,9 @@ namespace PRC.CORE.Media.Call
 {
     public interface IMediaCall
     {
-        event Action<OnCallCreatedEvent> CallCreated;
 
+        public event Action<PRC.CORE.Model.Call, ContextAppels> CallEvent;
+        //public ContextAppels getContextAppel(PRC.CORE.Model.Call call);
         //public event Action<Events.O2GEventArgs<OnCallModifiedEvent>> CallModified;
         //public event Action<Events.O2GEventArgs<OnCallRemovedEvent>> CallRemoved;
         //public event Action<Events.O2GEventArgs<OnUserStateModifiedEvent>> UserStateModified;
@@ -23,7 +24,7 @@ namespace PRC.CORE.Media.Call
         //public event Action<Events.O2GEventArgs<OnDynamicStateChangedEvent>> DynamicStateChanged;
 
         Task EventRegister();
-        //event Action<string> ReceivedCall;
+        //public ContextAppels getContextAppel(PRC.CORE.Model.Call call);
         Task<bool> BasicMakeCallAsync(string AgentNumber, string CustomNumber);
         Task<bool> BasicAnswerCallAsync(string AgentNumber);
         Task<bool> MakeCallAsync(string AgentNumber, string CustomNumber);
@@ -42,7 +43,7 @@ namespace PRC.CORE.Media.Call
         //Task<bool> BlindTransferAsync(string callRef, string transferTo, bool anonymous = false, string loginName = null);
         //Task<bool> CallbackAsync(string callRef, string loginName = null);
         //Task<bool> DropmeAsync(string callRef, string loginName = null);
-        //Task<bool> BasicDropMeAsync(string loginName = null);
+        Task<bool> BasicDropMeAsync(string loginName = null);
         //Task<bool> HoldAsync(string callRef, string deviceId, string loginName = null);
         //Task<bool> MergeAsync(string callRef, string heldCallRef, string loginName = null);
         //Task<bool> OverflowToVoiceMailAsync(string callRef, string loginName = null);
