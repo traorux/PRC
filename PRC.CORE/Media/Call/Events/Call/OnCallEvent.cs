@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace PRC.CORE.Media.Call.Events
 {
-    public class OnCallCreatedEvent 
+    public class OnCallEvent 
     {
         public string LoginName { get; init; }
         public string CallRef { get; init; }
@@ -14,6 +14,9 @@ namespace PRC.CORE.Media.Call.Events
         public string  CallerNumber { get; set; }
 
         public string State { get; set; }
+        public string Cause { get; set; }
+        public string EventName { get; set; }
+        public bool RingingRemote { get; set; }
         //public int MyProperty { get; set; }
 
         //public List<Leg> Legs { get; init; }

@@ -13,7 +13,7 @@ namespace PRC.CORE.Media.Call
 {
     public interface IMediaCall
     {
-        event Action<OnCallCreatedEvent> CallCreated;
+        event Action<OnCallEvent> CallEvent;
 
         //public event Action<Events.O2GEventArgs<OnCallModifiedEvent>> CallModified;
         //public event Action<Events.O2GEventArgs<OnCallRemovedEvent>> CallRemoved;

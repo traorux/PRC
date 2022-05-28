@@ -9,6 +9,7 @@ using PRC.CORE.Media.Call.Types;
 using PRC.CORE.Media.Call.Types.Call;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using static o2g.O2G;
 using static System.Net.Mime.MediaTypeNames;
@@ -28,7 +29,7 @@ namespace PRC.MEDIA.OXE
 
         private readonly string Host_o2G;
         private readonly ILogger<MediaOXE> logger;
-        public event Action<OnCallCreatedEvent> CallCreated;
+        public event Action<OnCallEvent> CallEvent;
 
         public MediaOXE(ILogger<MediaOXE> logger, IConfiguration Config)
         {
@@ -72,23 +73,72 @@ namespace PRC.MEDIA.OXE
                         Connected = true;
                         telephony.CallCreated += (source, ev) =>
                         {
-                            var onCallCreateEv = new OnCallCreatedEvent()
+                            try
                             {
-                                LoginName = ev.Event.LoginName,
-                                CallRef = ev.Event.CallRef,
-                                DeviceNumber = ev.Event.Legs[0].DeviceId,
-                                CallerNumber = ev.Event.Participants[0].ParticipantId,
-                                State = ev.Event.Legs[0].State.ToString()
-                            };
-                            CallCreated?.Invoke(onCallCreateEv);
+                                if (true)
+                                {
+                                    var onCallEv = new OnCallEvent()
+                                    {
+                                        LoginName = ev.Event.LoginName,
+                                        CallRef = ev.Event.CallRef,
+                                        DeviceNumber = ev.Event.Legs[0].DeviceId,
+                                        CallerNumber = GetParticipant(ev.Event.Participants),
+                                        State = ev.Event.Legs[0].State.ToString(),
+                                        EventName = ev.Event.EventName,
+                                    };
+                                    CallEvent?.Invoke(onCallEv);
+                                }
+                            }
+                            catch (Exception)
+                            {
+                            }
                         };
                         telephony.CallModified += (source, ev) =>
                         {
-                            //ReceivedCall?.Invoke(ev.Event.LoginName);
+                            try
+                            {
+                                if (true)
+                                {
+                                    var onCallEv = new OnCallEvent()
+                                    {
+                                        LoginName = ev.Event.LoginName,
+                                        CallRef = ev.Event.CallRef,
+                                        DeviceNumber = ev.Event.ModifiedLegs[0].DeviceId,
+                                        CallerNumber = GetParticipant(ev.Event.AddedParticipants),
+                                        Cause = ev.Event.Cause.ToString(),
+                                        EventName = ev.Event.EventName,
+                                        State = ev.Event.ModifiedLegs[0].State.ToString(),
+                                        RingingRemote = ev.Event.ModifiedLegs[0].RingingRemote,
+                                        //DeviceNumber = ev.Event.Legs[0].DeviceId,
+                                        ///CallerNumber = ev.Event.Participants[0].ParticipantId,
+                                        //State = ev.Event.Legs[0].State.ToString(),
+                                    };
+                                    CallEvent?.Invoke(onCallEv);
+                                }
+                            }
+                            catch (Exception)
+                            {
+                            }
                         };
                         telephony.CallRemoved += (source, ev) =>
                         {
-                            //ReceivedCall?.Invoke(ev.Event.EventName);
+                            try
+                            {
+                                var onCallEv = new OnCallEvent()
+                                {
+                                    LoginName = ev.Event.LoginName,
+                                    CallRef = ev.Event.CallRef,
+                                    Cause = ev.Event.Cause.ToString(),
+                                    EventName = ev.Event.EventName,
+                                    //DeviceNumber = ev.Event.Legs[0].DeviceId,
+                                    ///CallerNumber = ev.Event.Participants[0].ParticipantId,
+                                    //State = ev.Event.Legs[0].State.ToString(),
+                                };
+                                CallEvent?.Invoke(onCallEv);
+                            }
+                            catch (Exception)
+                            {
+                            }
                         };
 
                         logger.LogDebug($"O2G is connected and Event is established host {Host_o2G}.");
@@ -97,6 +147,19 @@ namespace PRC.MEDIA.OXE
 
                 // Suscribe to events using the built subscription
                 await myApplication.SubscribeAsync(subscription);
+                while (true)
+                {
+                    if (myApplication is null)
+                    {
+                        Console.WriteLine("MyApplication is null");
+                    }
+                    else
+                    {
+                        Console.WriteLine("MyApplication is not null");
+                    }
+                    await Task.Delay(5000);
+                }
+                //await Task.Delay(-1);
             }
             catch (Exception ex)
             {
@@ -105,7 +168,21 @@ namespace PRC.MEDIA.OXE
             }
         }
 
-
+        private string GetParticipant(List<o2g.Types.TelephonyNS.CallNS.Participant> participants)
+        {
+            if (participants != null)
+            {
+                if (participants.Count > 0)
+                {
+                    var part = participants.FirstOrDefault().ParticipantId;
+                    if (part != null)
+                    {
+                        return part;
+                    }
+                }
+            }
+            return string.Empty;
+        }
 
         public Task<bool> MakeCallAsync(string AgentNumber, string CustomNumber)
         {
