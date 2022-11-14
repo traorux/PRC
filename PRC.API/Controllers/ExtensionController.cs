@@ -25,12 +25,19 @@ namespace PRC.API.Controllers
             return await mediaService.CreateExtension(extension);
         }
 
+        [HttpPost]
+        public async Task<Extension> GetExtension(string ExtensionNumber)
+        {
+            return await mediaService.GetExtensionByNumber(ExtensionNumber);
+        }
 
         [HttpPut]
         public async Task<bool> ModifierExtension(Extension extension)
         {
             return await mediaService.UpdateExtension(extension);
         }
+
+        
 
     }
 

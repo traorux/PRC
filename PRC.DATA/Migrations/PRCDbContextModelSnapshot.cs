@@ -151,6 +151,11 @@ namespace PRC.DATA.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("loginName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.HasKey("Number");
 
                     b.ToTable("Extensions");
@@ -159,7 +164,8 @@ namespace PRC.DATA.Migrations
                         new
                         {
                             Number = "891",
-                            Password = "0000"
+                            Password = "0000",
+                            loginName = "oxe891"
                         });
                 });
 

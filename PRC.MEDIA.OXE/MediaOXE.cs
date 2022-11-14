@@ -20,10 +20,12 @@ namespace PRC.MEDIA.OXE
 {
     public class MediaOXE : IMediaCall
     {
-
-
-        private string myLoginName = "oxe891";
-        private string myPassword = "0000";
+        private string[] ids = { "oxe891", "oxe890" };
+        //private string[] ids = { "oxe891"};
+        private string myLoginName = "admin";
+        private string myPassword = "Letacla1!";
+        //private string myLoginName = "oxe891";
+        //private string myPassword = "0000";
         private O2G.Application myApplication;
 
         private ITelephony telephony;
@@ -57,19 +59,22 @@ namespace PRC.MEDIA.OXE
                 if (myApplication is null)
                 {
                     myApplication = new("ApplicationName");
-
                 }
+
                 await myApplication.ShutdownAsync();
                 o2g.Types.Host host = new o2g.Types.Host();
                 host.PrivateAddress = Host_o2G;
 
                 myApplication.SetHost(host);
 
+    
                 await myApplication.LoginAsync(myLoginName, myPassword);
 
                 Subscription subscription = Subscription.Builder
-                    .AddTelephonyEvents()
+                    .AddTelephonyEvents(ids)
+                    //.AddTelephonyEvents()
                     .Build();
+          
 
                 myApplication.ChannelInformation += (source, ev) =>
                 {
@@ -90,8 +95,7 @@ namespace PRC.MEDIA.OXE
                                     State state = new State() { 
                                         Status = GetState(ev.Event.Legs[0].State, ev.Event.Legs[0].RingingRemote),
                                         dateHeure = DateH
-                                    }
-                                        ;
+                                    } ;
                                     Call call = new Call
                                     {
                                         CallRef = ev.Event.CallRef,
@@ -137,7 +141,7 @@ namespace PRC.MEDIA.OXE
                                         {
                                             Status = GetState(ev.Event.ModifiedLegs[0].State, ev.Event.ModifiedLegs[0].RingingRemote),
                                             dateHeure = DateH
-                                        };
+                                    };
                                         call.States.Add(state);
 
                                     }
@@ -228,7 +232,7 @@ namespace PRC.MEDIA.OXE
                 }
                 return ContextAppels.AppelSortantCommunication;
             }
-            if (ev.Event.EventName == "OnCallModified" && ev.Event.ModifiedLegs[0].State == MediaState.Active && call.typeCall == "IncominCall")
+            if (ev.Event.EventName == "OnCallModified" && ev.Event.ModifiedLegs[0].State == MediaState.Active && call.typeCall == "IncomingCall")
             {
                 if (prevContext == ContextAppels.AppelEntrantCoummunucation)
                 {
@@ -322,11 +326,11 @@ namespace PRC.MEDIA.OXE
             return string.Empty;
         }
 
+
         public Task<bool> MakeCallAsync(string AgentNumber, string CustomNumber)
         {
             return this.MakeCallAsync(AgentNumber, CustomNumber, true, false, null, null, null);
         }
-
 
         public async Task<bool> MakeCallAsync(string AgentNumber, string CustomNumber, bool autoAnswer = true, bool inhibitProgressTone = false, string associatedData = null, string callingNumber = null, string loginName = null)
         {
@@ -503,7 +507,8 @@ namespace PRC.MEDIA.OXE
 
         public async Task<bool> BasicDropMeAsync(string loginName = null)
         {
-            return await telephony.BasicDropMeAsync(loginName = null);
+            //return await telephony.BasicDropMeAsync(loginName = null);
+            return await telephony.BasicDropMeAsync(loginName);
         }
 
         public async Task<bool> HoldAsync(string callRef, string deviceId, string loginName = null)
@@ -537,7 +542,7 @@ namespace PRC.MEDIA.OXE
         {
             return await telephony.RedirectAsync(callRef, redirectTo, anonymous = false, loginName = null);
         }
-        public async Task<bool> RetrieveAsync(string callRef, string deviceId, string loginName = null)
+        public async Task<bool> RetrieveAsync(string callRef, string deviceId, string loginName = null)//////
         {
             return await telephony.RetrieveAsync(callRef, deviceId, loginName = null);
         }

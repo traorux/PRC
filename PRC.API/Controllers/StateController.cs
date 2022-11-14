@@ -10,19 +10,22 @@ namespace PRC.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class DataCustomController : ControllerBase
+    public class StateController : ControllerBase
     {
         private readonly IMediaService mediaService;
 
-        public DataCustomController(IMediaService mediaService)
+        public StateController(IMediaService mediaService)
         {
             this.mediaService = mediaService;
         }
 
+
         [HttpPost]
-        public async Task<DataCustom> SearchDataCustom(int IdDataCustom)
+        public async Task<State> SearchState(string CallRef)
         {
-            return  await mediaService.SearchDataCustom(IdDataCustom);
+            return await mediaService.GetSates(CallRef);
         }
+
     }
+
 }

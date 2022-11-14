@@ -23,9 +23,9 @@ namespace PRC.SERVICE
             return user;
         }
 
-        public async Task<User> Authenticate(string username, string password)
+        public async Task<User> Authenticate(string useremail, string password)
         {
-            return await userRepository.Authenticate(username, password);
+            return await userRepository.Authenticate(useremail, password);
         }
 
         public void DeleteUser(int IdUser)

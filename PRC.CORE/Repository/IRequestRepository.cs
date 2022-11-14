@@ -10,7 +10,7 @@ namespace PRC.CORE.Repository
     public interface IRequestRepository
     {
         Task<IEnumerable<Request>> GetAllRequest();
-        Task<Request> GetRequestById(int IdRequest);
+        Task<Request> GetRequestById(string IdRequest);
         Task<Request> AddRequest(Request request);
         Task<Request> UpdateRequest(Request request);
         Task DeleteRequest(Request request);

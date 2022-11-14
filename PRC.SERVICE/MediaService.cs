@@ -45,9 +45,9 @@ namespace PRC.SERVICE
 
 
         ///Call  Services ------------------------------------------------------------------------------
-        public async Task<bool> DropeCall()
+        public async Task<bool> DropeCall(string loginName)
         {
-            return await mediaCall.BasicDropMeAsync("891");
+            return await mediaCall.BasicDropMeAsync(loginName);
         }
 
 
@@ -69,11 +69,10 @@ namespace PRC.SERVICE
             var customer = await customerRepository.GetCustomerByNumber(call.CustomerNumber);
             if (extension != null && customer != null)
             {
-
                 call.ExtensionNumber = extension.Number;
                 call.IdCustomer = customer.IdCustomer;
                 await callRepository.AddCall(call);
-                call.Customer.DataCustom = await dataCustomRepository.GetDataCustomById(call.Customer.IdCustomer);
+                //call.Customer.DataCustom = await dataCustomRepository.GetDataCustomById(call.Customer.IdCustomer);
                 return call;
 
             }
@@ -220,7 +219,17 @@ namespace PRC.SERVICE
             {
                 return await callRepository.UpdateCall(callx);
             }
-            return null;
+            return null; 
+        }
+
+        public async Task<bool> MiseEntente(Call call)
+        {
+            return await mediaCall.HoldAsync(call.CallRef, call.ExtensionNumber);
+        }
+
+        public async Task<bool> FinEntente(Call call)
+        {
+            return await mediaCall.RetrieveAsync(call.CallRef, call.ExtensionNumber);
         }
 
         ///Extension  Services ------------------------------------------------------------------------------
@@ -258,13 +267,17 @@ namespace PRC.SERVICE
                 return await extensionRepository.AddExtension(extension);
         }
 
-       
+        public async Task<Extension> GetExtensionByNumber(string ExtensionNumber)
+        {
+            return await extensionRepository.GetExtensionByNumber(ExtensionNumber);
+        }
+
 
         ///Customer  Services ------------------------------------------------------------------------------
         public async Task<bool> CreateCustomer(Customer customer)
         {
             var newcustomer = await customerRepository.GetCustomerByNumber(customer.CustomerNumber);
-            if (newcustomer.CustomerNumber == null)
+            if (newcustomer.CustomerNumber != null)
             {
                 return await customerRepository.AddCustomer(customer);
             }
@@ -276,13 +289,17 @@ namespace PRC.SERVICE
             var customer = await customerRepository.GetCustomerByNumber(customerNumber);
             if (customer == null)
             {
-                //return "Numero non enregistré";
+                Customer customer1 = new Customer();
+                customer1.CustomerNumber = customerNumber;
+                await customerRepository.AddCustomer(customer1);
+                var customer2 = await customerRepository.GetCustomerByNumber(customer1.CustomerNumber);
+                return customer2;
             }
-            else
-                customer.DataCustom = await dataCustomRepository.GetDataCustomById(customer.IdCustomer);
             return customer;
-
         }
+
+       
+
         public async Task<bool> UpdateCustomer(Customer customer)
         {
             var newcustomer = await customerRepository.GetCustomerByNumber(customer.CustomerNumber);
@@ -301,10 +318,30 @@ namespace PRC.SERVICE
             return await callRepository.GetAllCall();
         }
 
-            
 
+        //DataCustom
+
+        public async Task<DataCustom> SearchDataCustom(int IdDataCustom)
+        {
+            var datacustom = await dataCustomRepository.GetDataCustomById(IdDataCustom);
+            if (datacustom != null)
+            {
+                return datacustom;
+            }
+            else
+                return null;
+        }
+
+        //Request
         public async Task<Request> CreateRequest(Request request)
         {
+            var resp = await requestRepository.GetRequestById(request.IdRequest);
+            if(resp != null)
+            {
+                resp.Motif = request.Motif;
+                resp.status = request.status;
+                return await requestRepository.UpdateRequest(resp);
+            }
             return await requestRepository.AddRequest(request);
         }
 
@@ -313,14 +350,53 @@ namespace PRC.SERVICE
             return await callRepository.GetHistCall(customerNumber);
         }
 
+        //History service
         public async Task<ICollection<History>> GetHistories(string customerNumber)
         {
             return await historyRepository.GetHistories(customerNumber);
         }
 
+        public async Task<ICollection<History>> GetIncommingCalls(string typeCall)
+        {
+            return await historyRepository.GetIncommingCalls(typeCall);
+        }
+
+        public async Task<ICollection<History>> GetOutgoingCalls(string typeCall)
+        {
+            return await historyRepository.GetOutgoingCalls(typeCall);
+        }
+
         public async Task<Call> GetCallInfos(string CallRef)
         {
             return await callRepository.GetACallByCallRef(CallRef);
+        }
+
+        public async Task<Call> CallInfos(string CustomerNumber)
+        {
+            return await callRepository.GetACallByNumber(CustomerNumber);
+        }
+
+
+        //State services
+        public async Task<State> GetSates(string CallRef)
+        {
+            return await stateRepository.GetSateByCallRef(CallRef);
+        }
+
+        //Calls statistiques services
+        public int GetNumberOfIncomingCalls()
+        {
+            return  callRepository.GetNumberOfIncomingCalls();
+        }
+
+        public int GetNumberOfOutgoingCalls()
+        {
+            return callRepository.GetNumberOfOutgoingCalls();
+        }
+
+        public dynamic GetStatistique(DateTime date)
+        {
+            return callRepository.GetStatistique(date);
         }
     }
 

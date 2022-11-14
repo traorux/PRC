@@ -10,8 +10,8 @@ using PRC.DATA;
 namespace PRC.DATA.Migrations
 {
     [DbContext(typeof(PRCDbContext))]
-    [Migration("20220713171750_Initial")]
-    partial class Initial
+    [Migration("20221010073406_initiale")]
+    partial class initiale
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -153,6 +153,11 @@ namespace PRC.DATA.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("loginName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.HasKey("Number");
 
                     b.ToTable("Extensions");
@@ -161,7 +166,8 @@ namespace PRC.DATA.Migrations
                         new
                         {
                             Number = "891",
-                            Password = "0000"
+                            Password = "0000",
+                            loginName = "oxe891"
                         });
                 });
 

@@ -37,6 +37,18 @@ namespace PRC.API.Controllers
             return await mediaService.MakeOutgoingCall(call);
         }
 
+        [HttpPost]
+        public async Task<bool> MettreEntente(Call call)
+        {
+            return await mediaService.MiseEntente(call);
+        }
+
+        [HttpPost]
+        public async Task<bool> RecupererEntente(Call call)
+        {
+            return await mediaService.FinEntente(call);
+        }
+
 
 
         [HttpPost]
@@ -47,10 +59,10 @@ namespace PRC.API.Controllers
 
 
 
-        [HttpGet]
-        public async Task<bool> Racrocher()
+        [HttpPost]
+        public async Task<bool> Racrocher(string loginName)
         {
-            return await mediaService.DropeCall();
+            return await mediaService.DropeCall(loginName);
         }
 
         [HttpGet]   
@@ -71,6 +83,32 @@ namespace PRC.API.Controllers
         public async Task<Call> ObtenirCall(string CallRef)
         {
             return await mediaService.GetCallInfos(CallRef);
+        }
+
+        [HttpPost]
+        public async Task<Call> ObtCall(string CustomerNumber)
+        {
+            return await mediaService.CallInfos(CustomerNumber);
+        }
+
+       [HttpGet]
+       public int GetNumberOfIncomingCalls()
+       {
+            return mediaService.GetNumberOfIncomingCalls();
+       }
+
+       [HttpGet]
+       public int GetNumberOfOutgoingCalls()
+        {
+            return mediaService.GetNumberOfOutgoingCalls();
+        }
+
+        [HttpGet]
+
+        public dynamic GetStatistique()
+        {
+            var date = (DateTime.Now - TimeSpan.FromDays(1));
+            return mediaService.GetStatistique(date);
         }
 
     }

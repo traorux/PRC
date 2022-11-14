@@ -36,6 +36,14 @@ namespace PRC.DATA.Repository
             return Task.FromResult(dbContext.States.Where(c => (c.IdState.Equals(IdState))).FirstOrDefault());
         }
 
+        public Task<State> GetSateByCallRef(string CallRef)
+        {
+            return Task.FromResult(dbContext.States
+                .Where(c => (c.CallRef.Equals(CallRef)))
+                .OrderBy(c => (c.dateHeure)).ThenByDescending(c => (c.dateHeure))
+                .LastOrDefault());
+        }
+
         public Task<IEnumerable<State>> GetAllState()
         {
             IEnumerable<State> List = dbContext.States.ToList();

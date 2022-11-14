@@ -22,6 +22,10 @@ namespace PRC.DATA.Configuration
                 .IsRequired()
                 .HasMaxLength(50);
             builder
+                .Property(m => m.loginName)
+                .IsRequired()
+                .HasMaxLength(50);
+            builder
                 .Property(m => m.Password)
                 .HasMaxLength(50);
 

@@ -45,11 +45,42 @@ namespace PRC.API.Controllers{
         //    userService.UpdateUserParam(user, password);
         //}
 
+        //[HttpPost("authenticate")]
+        //public async Task<IActionResult> Authenticate(UserResource userResource)
+        //{
+        //    var user = await userService.Authenticate(userResource.Username, userResource.Password);
+        //    if (user == null) return BadRequest(new { message = "Username or password is incorrect" });
+
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var key = Encoding.ASCII.GetBytes(_config.GetValue<string>("AppSettings:Secret"));
+        //    var tokenDescriptor = new SecurityTokenDescriptor
+        //    {
+        //        Subject = new ClaimsIdentity(new Claim[]
+        //         {
+        //            new Claim(ClaimTypes.Name, user.IdUser.ToString())
+        //         }),
+        //        Expires = DateTime.UtcNow.AddDays(7),
+        //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        //    };
+        //    var token = tokenHandler.CreateToken(tokenDescriptor);
+        //    var tokenString = tokenHandler.WriteToken(token);
+        //    return Ok(new
+        //    {
+        //        Id = user.IdUser,
+        //        Username = user.Username,
+        //        FirstName = user.FirstName,
+        //        LastName = user.LastName,
+        //        UserEmail = user.UserEmail,
+        //        DeviceNumber = user.DeviceNumber,
+        //        Token = tokenString
+        //    });
+        //}
+
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate(UserResource userResource)
         {
-            var user = await userService.Authenticate(userResource.Username, userResource.Password);
-            if (user == null) return BadRequest(new { message = "Username or password is incorrect" });
+            var user = await userService.Authenticate(userResource.UserEmail, userResource.Password);
+            if (user == null) return BadRequest(new { message = "Email or password is incorrect" });
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_config.GetValue<string>("AppSettings:Secret"));
@@ -75,6 +106,7 @@ namespace PRC.API.Controllers{
                 Token = tokenString
             });
         }
+
 
 
         [HttpPost("register")]

@@ -33,12 +33,12 @@ namespace PRC.DATA.Repository
             return user;
         }
 
-        public async Task<User> Authenticate(string username, string password)
+        public async Task<User> Authenticate(string useremail, string password)
         {
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(useremail) || string.IsNullOrEmpty(password))
                 return null;
-            var user = await dbContext.Users.SingleOrDefaultAsync(x => x.Username == username);
+            var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserEmail == useremail);
 
             if (user == null)
                 return null;
@@ -53,9 +53,9 @@ namespace PRC.DATA.Repository
 
             if (string.IsNullOrWhiteSpace(password))
                 throw new Exception("Password is required");
-            var resultUser = await dbContext.Users.AnyAsync(x => x.Username == user.Username);
+            var resultUser = await dbContext.Users.AnyAsync(x => (x.Username == user.Username || x.UserEmail == user.UserEmail));
             if (resultUser)
-                throw new Exception("Username \"" + user.Username + "\" is already taken");
+                throw new Exception("UserEmail \"" + user.UserEmail +  "\" is already taken");
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);

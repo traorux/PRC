@@ -17,27 +17,44 @@ namespace PRC.CORE.Service
          Task<Call> IncomingCallCommunication(Call call);
          Task<Call> EndCall(Call call);
          Task<bool> MakeOutgoingCall(Call call);
-         Task<bool> DropeCall();
+         Task<bool> DropeCall(string loginName);
+        Task<bool> MiseEntente(Call call);
+        Task<bool> FinEntente(Call call);
 
-         // Extension services
-         Task<IEnumerable<Extension>> GetExtensionsList();
+        // Extension services
+        Task<IEnumerable<Extension>> GetExtensionsList();
         Task<bool> CreateExtension(Extension extension);
         void DeleteExtension(Extension extension);
         Task<bool> UpdateExtension(Extension extension);
+        Task<Extension> GetExtensionByNumber(string ExtensionNumber);
 
 
 
 
-        //Customer sersvices
+        //Customer services
         Task<bool> CreateCustomer(Customer customer);
          Task<bool> UpdateCustomer(Customer customer);
          Task<Customer> SearchCustomer(string customerNumber);
+        Task<DataCustom> SearchDataCustom(int IdDataCustom);
          Task<IEnumerable<Call>> GetCallsList();
          Task<IEnumerable<Call>> GetHistsList(string customerNumber);
-        Task<ICollection<History>> GetHistories(string customerNumber);
-        Task<Call> GetCallInfos(string CallRef);
+        Task<Call> GetCallInfos(string CallRef); 
+        Task<Call> CallInfos(string CustomerNumber);
 
         Task<Request> CreateRequest(Request request);
+
+        //History services
+        Task<ICollection<History>> GetHistories(string customerNumber);
+        Task<ICollection<History>> GetIncommingCalls(string typeCall);
+        Task<ICollection<History>> GetOutgoingCalls(string typeCall);
+
+        //States Services
+        Task<State> GetSates(string CallRef);
+
+        //Calls Statistiques services
+        int GetNumberOfIncomingCalls();
+        int GetNumberOfOutgoingCalls();
+        dynamic GetStatistique(DateTime date);
 
 
     }

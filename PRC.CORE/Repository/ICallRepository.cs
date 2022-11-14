@@ -9,12 +9,16 @@ namespace PRC.CORE.Repository
 {
     public interface ICallRepository
     {
-        Task<IEnumerable<Call>> GetAllCall();
+        Task<IEnumerable<Call>> GetAllCall(); 
+         Task<Call> GetACallByNumber(string CustomerNumber);
         Task<Call> GetACallByCallRef(string CallRef);
         Task<Call> AddCall(Call call);
         Task<Call> UpdateCall(Call call);
         Task DeleteCall(Call call);
         Task<IEnumerable<Call>> GetLastCall(string customerNumber);
         Task<IEnumerable<Call>> GetHistCall(string customerNumber);
+        int GetNumberOfIncomingCalls();
+        int GetNumberOfOutgoingCalls();
+        dynamic GetStatistique(DateTime date);
     }
 }

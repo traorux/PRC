@@ -35,16 +35,7 @@ namespace PRC.API.Controllers
         [HttpPost]
         public async Task<Customer> SearchCustomer(string customerNumber)
         {
-            var customer = await mediaService.SearchCustomer(customerNumber);
-            if (customer.DataCustom != null)
-            {
-                customer.DataCustom.Customer = null;
-                return customer;
-            }
-            else
-                return customer;
-
-         
+            return  await mediaService.SearchCustomer(customerNumber);
         }
 
        

@@ -11,6 +11,7 @@ namespace PRC.CORE.Repository
     {
         Task<IEnumerable<State>> GetAllState();
         Task<State> GetSateById(int IdState);
+        Task<State> GetSateByCallRef(string CallRef);
         Task<bool> AddState(State state);
         Task<State> UpdateState(State state);
         Task DeleteState(State state);

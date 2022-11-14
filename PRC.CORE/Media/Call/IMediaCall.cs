@@ -15,21 +15,16 @@ namespace PRC.CORE.Media.Call
     {
 
         public event Action<PRC.CORE.Model.Call, ContextAppels> CallEvent;
-        //public ContextAppels getContextAppel(PRC.CORE.Model.Call call);
-        //public event Action<Events.O2GEventArgs<OnCallModifiedEvent>> CallModified;
-        //public event Action<Events.O2GEventArgs<OnCallRemovedEvent>> CallRemoved;
-        //public event Action<Events.O2GEventArgs<OnUserStateModifiedEvent>> UserStateModified;
-        //public event Action<Events.O2GEventArgs<OnTelephonyStateEvent>> TelephonyState;
-        //public event Action<Events.O2GEventArgs<OnDeviceStateModifiedEvent>> DeviceStateModified;
-        //public event Action<Events.O2GEventArgs<OnDynamicStateChangedEvent>> DynamicStateChanged;
 
         Task EventRegister();
-        //public ContextAppels getContextAppel(PRC.CORE.Model.Call call);
         Task<bool> BasicMakeCallAsync(string AgentNumber, string CustomNumber);
         Task<bool> BasicAnswerCallAsync(string AgentNumber);
         Task<bool> MakeCallAsync(string AgentNumber, string CustomNumber);
         Task<bool> MakeCallAsync(string AgentNumber, string CustomNumber, bool autoAnswer = true, bool inhibitProgressTone = false, string associatedData = null, string callingNumber = null, string loginName = null);
-
+        Task<bool> AnswerAsync(string callRef, string deviceId);
+        Task<bool> BasicDropMeAsync(string loginName = null);
+        Task<bool> HoldAsync(string callRef, string deviceId, string loginName = null);
+        Task<bool> RetrieveAsync(string callRef, string deviceId, string loginName = null);
 
         //Task<List<PbxCall>> GetCallsAsync(string loginName = null); 
         //Task<PbxCall> GetCallAsync(string callRef, string loginName = null);
@@ -38,12 +33,10 @@ namespace PRC.CORE.Media.Call
         //Task<bool> MakeBusinessCallAsync(string deviceId, string callee, string businessCode, string loginName = null);
         //Task<bool> MakeSupervisorCallAsync(string deviceId, bool autoAnswer = true, string loginName = null);
         //Task<bool> AlternateAsync(string callRef, string deviceId);
-        Task<bool> AnswerAsync(string callRef, string deviceId);
         //Task<bool> AttachDataAsync(string callRef, string deviceId, string associatedData);
         //Task<bool> BlindTransferAsync(string callRef, string transferTo, bool anonymous = false, string loginName = null);
         //Task<bool> CallbackAsync(string callRef, string loginName = null);
         //Task<bool> DropmeAsync(string callRef, string loginName = null);
-        Task<bool> BasicDropMeAsync(string loginName = null);
         //Task<bool> HoldAsync(string callRef, string deviceId, string loginName = null);
         //Task<bool> MergeAsync(string callRef, string heldCallRef, string loginName = null);
         //Task<bool> OverflowToVoiceMailAsync(string callRef, string loginName = null);

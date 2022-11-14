@@ -52,7 +52,8 @@ namespace PRC.PROCESS
                         };
                     case ContextAppels.AppelSortantSonerie:
                         {
-                            call =await mediaService.OutgoingRingingCall(call);
+                            //call = await mediaService.OutgoingRingingCall(call);
+                            await mediaService.OutgoingRingingCall(call);
                             break;
                         };
                     case ContextAppels.ReceptionAppelEntrant:
@@ -79,16 +80,10 @@ namespace PRC.PROCESS
                         //default:
                 }
 
-
-                /*string jsonString = JsonConvert.SerializeObject(infos,
-                    new JsonSerializerSettings()
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                    });*/
                 await _messageHubContext.Clients.All.SendAsync(infos.ContextAppels, infos.CallRef, infos.AgentNumber, stoppingToken);
                 try
                 {
-                    Console.WriteLine($"---- {call.dateHeure}  {call.CallRef} {call.ExtensionNumber} {call.CustomerNumber}  {call.typeCall} {affich(call.States)} {call.removeParticipant}");
+                    Console.WriteLine($"---- {call.dateHeure}  {infos.CallRef} {infos.AgentNumber} {call.CustomerNumber}  {call.typeCall} {affich(call.States)} {call.removeParticipant}");
                 }
                 catch (Exception)
                 {

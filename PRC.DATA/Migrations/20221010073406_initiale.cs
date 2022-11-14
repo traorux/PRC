@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PRC.DATA.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initiale : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,6 +27,7 @@ namespace PRC.DATA.Migrations
                 columns: table => new
                 {
                     Number = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    loginName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
@@ -186,8 +187,8 @@ namespace PRC.DATA.Migrations
 
             migrationBuilder.InsertData(
                 table: "Extensions",
-                columns: new[] { "Number", "Password" },
-                values: new object[] { "891", "0000" });
+                columns: new[] { "Number", "Password", "loginName" },
+                values: new object[] { "891", "0000", "oxe891" });
 
             migrationBuilder.InsertData(
                 table: "Users",

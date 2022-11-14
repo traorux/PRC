@@ -51,7 +51,7 @@ namespace PRC.DATA
 
             //builder.Entity<Role>().HasData(new Role { IdRole = 1, isAdmin = true, isSupervisor = true, isUser = false, isReporter =false });
             builder.Entity<Customer>().HasData(new Customer { IdCustomer = 1, CustomerNumber = "890", LastName = "Kouame", FirstName = "JeanLuc" });
-            builder.Entity<Extension>().HasData(new Extension { Number = "891", Password = "0000"});
+            builder.Entity<Extension>().HasData(new Extension { Number = "891",loginName = "oxe891", Password = "0000"});
             builder.Entity<User>().HasData(new User { IdUser = 1, DeviceNumber = "891", LastName = "Kouadio", FirstName = "Marc", UserEmail = "jean@gmail.com" });
             builder.Entity<DataCustom>().HasData(new DataCustom { IdDataCustom = 1, NumeroCompte = "oxe890", TypeVoiture = "Navara", DateVisiteTec = "12/06/2022" });
             builder.Entity<Call>().HasData(new Call { CallRef = "a2daba6270000400", ExtensionNumber = "891", IdCustomer = 1, CustomerNumber = "890", typeCall = "IncommingCall", removeParticipant = "890" });

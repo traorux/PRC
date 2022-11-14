@@ -31,7 +31,7 @@ namespace PRC.DATA.Repository
             await dbContext.SaveChangesAsync();
         }
 
-        public Task<Request> GetRequestById(int IdRequest)
+        public Task<Request> GetRequestById(string IdRequest)
         {
             return Task.FromResult(dbContext.Requests.Where(c => (c.IdRequest.Equals(IdRequest))).FirstOrDefault());
         }

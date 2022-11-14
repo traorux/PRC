@@ -45,7 +45,7 @@ namespace PRC.COEUR
             services.AddSingleton<IMediaCall, MediaOXE>();
             services.AddScoped<IMediaService, MediaService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ICallRepository, CallRepository>();
+            services.AddTransient<ICallRepository, CallRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IStateRepository, StateRepository>();
